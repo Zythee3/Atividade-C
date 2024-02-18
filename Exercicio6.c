@@ -63,10 +63,12 @@ void insere_pilha(Pilha *pilha, char *nome, int id)
     novo->proximo = pilha->topo;
     pilha->topo = novo;
 }
-void imprimi_fila(Fila *fila){
+void imprimi_fila(Fila *fila)
+{
     Aluno *leitor;
     leitor = fila->inicio;
-    while(leitor != NULL){
+    while (leitor != NULL)
+    {
         printf("%d\n%f\n%f ", leitor->id, leitor->nota1, leitor->nota2);
         leitor = leitor->proximo;
     }
@@ -126,16 +128,19 @@ int examina_pilha(Pilha *pilha, int id)
     }
 }
 
-void gera_media_fila(Fila *fila, int id){
+void gera_media_fila(Fila *fila, int id)
+{
     Aluno *leitor;
     float media = 0;
     leitor = fila->inicio;
-    while (leitor != NULL){
-        if(leitor->id == id){
+    while (leitor != NULL)
+    {
+        if (leitor->id == id)
+        {
             media = leitor->nota1 + leitor->nota2;
-            printf("media do aluno: %.1f\n", media/2);
+            printf("media do aluno: %.1f\n", media / 2);
         }
-        leitor = leitor->proximo;   
+        leitor = leitor->proximo;
     }
 }
 
@@ -151,6 +156,53 @@ int contador_pilha(Pilha *pilha)
     }
     contador++;
     return contador;
+}
+
+void remover_da_fila(Fila *fila)
+{
+    Aluno *leitor;
+    if (fila->inicio == NULL)
+    {
+        printf("\nA fila esta vazia\n");
+    }
+    else
+    {
+        leitor = fila->inicio;
+        fila->inicio = fila->inicio->proximo;
+        free(leitor);
+    }
+}
+
+void remover_da_pilha(Pilha *pilha, Fila *fila)
+{
+    Aluno *leitor, *leitor_fila;
+    int tem_nota = 0;
+    leitor_fila = fila->inicio;
+    if (pilha->topo == NULL)
+    {
+        printf("\nA pilha esta vazia!!\n");
+    }
+    else
+    {
+        leitor = pilha->topo;
+        while(leitor_fila != NULL){
+            if(leitor_fila->id == leitor->id){
+                
+                tem_nota = 1;
+                break;
+            }
+            leitor_fila = leitor_fila->proximo;
+        }
+        if(tem_nota == 1){
+            printf("\nNao foi possivel excluir o aluno, pois o mesmo possui notas registradas\n");
+        }
+        else{
+            pilha->topo = pilha->topo->proximo;
+            free(leitor);
+            printf("\nAluno excluido com sucesso!!\n");
+        }
+        
+    }
 }
 
 int main()
@@ -183,16 +235,26 @@ int main()
             printf("\nInforme o ID do aluno ao qual deseja inserir uma nota:\n");
             scanf("%d", &escolha_id);
             resultado_id = examina_pilha(pilha_alunos, escolha_id);
-            if(resultado_id == 1)
+            if (resultado_id == 1)
             {
                 printf("\nAluno encontrado!!\n");
                 printf("Escolha a primeira nota do aluno:\n");
                 scanf("%f", &nota1);
-                
+
                 printf("Escolha a segunda nota do aluno:\n");
                 scanf("%f", &nota2);
-                insere_fila(fila_alunos, nota1, nota2, escolha_id);
-                
+                if(nota1 >= 1 && nota1<=10){
+                    if(nota2>=1 && nota2<=10){
+                        insere_fila(fila_alunos, nota1, nota2, escolha_id);
+
+                    }
+                    else{
+                    printf("\nNota 2 invalida, por favor insira uma nota entre 1 e 10\n");
+                    }
+                }   
+                else{
+                    printf("\nNota 1 invalida, por favor insira uma nota entre 1 e 10\n");
+                }
             }
             else
             {
@@ -210,8 +272,12 @@ int main()
             imprimi_pilha_nomes(pilha_alunos);
             break;
         case 5:
+            remover_da_pilha(pilha_alunos, fila_alunos);
             break;
-        
+        case 6:
+            remover_da_fila(fila_alunos);
+            break;
+
         default:
             break;
         }
