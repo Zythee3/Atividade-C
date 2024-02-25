@@ -244,7 +244,7 @@ int main()
             char nome[50]; // Ajuste o tamanho do array conforme necessário
             printf("Digite o nome do tipo que você deseja remover: ");
             scanf("%s", nome);
-            remove_tipo_se_vazio(&inicio, nome);
+            remove_tipo_se_vazio(inicio, nome);
             break;
         
         default:
